@@ -21,14 +21,18 @@ if [[ -z "${CONTAINER_DIR}" ]]; then
     CONTAINER_DIR=/root/catkin_ws/src/dope
 fi
 
+STORAGE_CONTAINER=/data
+STORAGE_HOST=/data
+
 echo "Container name     : ${CONTAINER_NAME}"
 echo "Host directory     : ${HOST_DIR}"
 echo "Container directory: ${CONTAINER_DIR}"
 DOPE_ID=`docker ps -aqf "name=^/${CONTAINER_NAME}$"`
+#if [ 1 ]; then
 if [ -z "${DOPE_ID}" ]; then
     echo "Creating new DOPE docker container."
     xhost +local:root
-    nvidia-docker run -it --privileged --network=host -v ${HOST_DIR}:${CONTAINER_DIR}:rw -v /tmp/.X11-unix:/tmp/.X11-unix:rw --env="DISPLAY" --name=${CONTAINER_NAME} nvidia-dope:kinetic-v1 bash
+    nvidia-docker run -it --privileged --network=host -v ${HOST_DIR}:${CONTAINER_DIR}:rw -v /tmp/.X11-unix:/tmp/.X11-unix:rw -v ${STORAGE_HOST}:${STORAGE_CONTAINER}:rw --env="DISPLAY" --name=${CONTAINER_NAME} nvidia-dope:kinetic-v1 bash
 else
     echo "Found DOPE docker container: ${DOPE_ID}."
     # Check if the container is already running and start if necessary.
