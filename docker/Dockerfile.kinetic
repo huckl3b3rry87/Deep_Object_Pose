@@ -67,6 +67,12 @@ RUN apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key C1CF6
     && apt-get clean                                                                 \
     && rm -rf /var/lib/apt/lists/{apt,dpkg,cache,log} /tmp/* /var/tmp/*
 
+# install camera driver
+RUN apt-get update && apt-get install -y \
+    ros-kinetic-usb-cam
+
+
+
 # Setup catkin workspace
 ENV CATKIN_WS ${HOME}/catkin_ws
 COPY . ${CATKIN_WS}/src/dope
